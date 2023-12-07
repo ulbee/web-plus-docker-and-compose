@@ -9,12 +9,18 @@ services:
     ports:
       - "4000:3000"
     env_file: .env
+    networks:
+      - backend
 
   postgres:
     container_name: db
     image: postgres
     restart: always
     env_file: .env
+    volumes:
+      - postgres:/data/postgres
+    networks:
+      - backend
 
   frontend:
     container_name: frontend
@@ -22,10 +28,21 @@ services:
       context: frontend
       dockerfile: Dockerfile
     ports:
-      - "8080:3000"
+      - "8080:80"
+    networks:
+      - frontend
 
   adminer:
     image: adminer
     restart: always
     ports:
       - "8081:8080"
+    networks:
+      - backend
+
+volumes:
+  postgres:
+
+networks:
+  backend:
+  frontend:
